@@ -6,7 +6,7 @@ from pipeline.feature_extractor import generate_feature_file
 from pipeline.predictor import load_model, predict_and_aggregate
 from pipeline.transcriber import transcribe_all_audios
 import soundfile as sf
-import sounddevice as sd
+#import sounddevice as sd
 import numpy as np
 import pandas as pd
 
