@@ -5,7 +5,7 @@ streamlit
 librosa
 praat-parselmouth
 soundfile
-sounddevice
+#sounddevice
 
 # Data manipulation
 numpy==2.1.0
