@@ -17,6 +17,9 @@ spacy
 torch
 transformers
 
+# model
+xgboost==3.0.0
+
 # Speech-to-text pipeline
 # (Ensure ffmpeg is installed on system if using certain audio formats)
 
