@@ -18,7 +18,7 @@ with col1:
 with col2:
     st.title("Speech Fluency Evaluator")
 # title
-st.title("Speech Fluency Evaluator")
+#st.title("Speech Fluency Evaluator")
 
 # Option to record audio in-browser
 st.subheader("Record Audio (Browser)")
