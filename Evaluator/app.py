@@ -13,9 +13,9 @@ import io
 
 
 # Centered logo
-col1, col2, col3 = st.columns([1, 2, 1])
+col1, col2, col3 = st.columns([1, 4, 1])
 with col2:
-    st.image("Evaluator/logo_sm.png", width=120)
+    st.image("Evaluator/logo_sm.png", width=220)
 # title
 st.title("Speech Fluency Evaluator")
 
