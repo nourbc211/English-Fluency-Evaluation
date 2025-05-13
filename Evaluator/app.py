@@ -13,15 +13,9 @@ import io
 
 
 # Centered logo
-st.markdown(
-    """
-    <div style="text-align: center;">
-        <img src="Evaluator/logo_sm.png" width="120">
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    st.image("Evaluator/logo_sm.png", width=120)
 # title
 st.title("Speech Fluency Evaluator")
 
