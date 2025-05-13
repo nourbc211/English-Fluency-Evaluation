@@ -11,9 +11,16 @@ import numpy as np
 import pandas as pd
 import io
 
-col1, col2, col3 = st.columns([1, 4, 1])
-with col2:
-    st.image("Evaluator/logo_sm.png", width=220)
+# Show logo as a centered banner
+st.markdown(
+    """
+    <div style='text-align: center; padding-bottom: 0.5rem;'>
+        <img src='Evaluator/logo_sm.png' width='380' style='max-width: 90%; height: auto;' />
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
     
 # title
 st.title("Speech Fluency Evaluator")
