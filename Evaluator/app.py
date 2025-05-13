@@ -21,6 +21,9 @@ except ImportError:
     audio_bytes = None
     st.info("To enable in-browser recording, install streamlit-audio-recorder: pip install audio_recorder_streamlit")
 
+# Ensure directory exists
+os.makedirs("input/audios", exist_ok=True)
+
 recorded_audio_path = None
 if audio_bytes is not None:
     if len(audio_bytes) > 0:
