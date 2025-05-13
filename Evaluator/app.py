@@ -14,7 +14,7 @@ import pandas as pd
 st.title("Speech Fluency Evaluator")
 
 # company's logo
-st.image("logo_sm.png", width=150)
+st.image("Evaluator/logo_sm.png", width=150)
 
 # Option to record audio in-browser
 st.subheader("Record Audio (Browser)")
