@@ -132,6 +132,9 @@ def generate_feature_file(audio_dir="input/segments", transcript_dir="input/tran
             file_list.append(file_path)
 
     features_array = np.array(feature_list)
+    
+    print(f"Saving to {output_path}...")
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
     np.save(output_path, features_array)
     print(f"✅ Saved features for {len(file_list)} audio files to {output_path}")
     return features_array 
