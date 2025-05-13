@@ -11,11 +11,19 @@ import numpy as np
 import pandas as pd
 import io
 
+
+# Centered logo
+st.markdown(
+    """
+    <div style="text-align: center;">
+        <img src="Evaluator/logo_sm.png" width="120">
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
 # title
 st.title("Speech Fluency Evaluator")
-
-# company's logo
-st.image("Evaluator/logo_sm.png", width=150)
 
 # Option to record audio in-browser
 st.subheader("Record Audio (Browser)")
