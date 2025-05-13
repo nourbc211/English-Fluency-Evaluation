@@ -9,6 +9,7 @@ import soundfile as sf
 #import sounddevice as sd
 import numpy as np
 import pandas as pd
+import io
 
 # title
 st.title("Speech Fluency Evaluator")
