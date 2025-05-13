@@ -1,0 +1,24 @@
+# Web app interface
+streamlit
+
+# Audio processing
+librosa
+praat-parselmouth
+soundfile
+sounddevice
+
+# Data manipulation
+numpy==2.1.0
+pandas
+joblib
+
+# NLP & Speech Models
+spacy
+torch
+transformers
+
+# Speech-to-text pipeline
+# (Ensure ffmpeg is installed on system if using certain audio formats)
+
+# GitHub package for audio recording in-browser
+streamlit_audio_recorder @ git+https://github.com/stefanrmmr/streamlit_audio_recorder.git
