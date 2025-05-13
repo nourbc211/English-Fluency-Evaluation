@@ -12,10 +12,11 @@ import pandas as pd
 import io
 
 
-# Centered logo
-col1, col2, col3 = st.columns([1, 4, 1])
+col1, col2 = st.columns([1, 5])
+with col1:
+    st.image("Evaluator/logo_sm.png", width=80)
 with col2:
-    st.image("Evaluator/logo_sm.png", width=220)
+    st.title("Speech Fluency Evaluator")
 # title
 st.title("Speech Fluency Evaluator")
 
