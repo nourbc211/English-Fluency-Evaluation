@@ -11,14 +11,12 @@ import numpy as np
 import pandas as pd
 import io
 
-
-col1, col2 = st.columns([1, 5])
-with col1:
-    st.image("Evaluator/logo_sm.png", width=80)
+col1, col2, col3 = st.columns([1, 4, 1])
 with col2:
-    st.title("Speech Fluency Evaluator")
+    st.image("Evaluator/logo_sm.png", width=220)
+    
 # title
-#st.title("Speech Fluency Evaluator")
+st.title("Speech Fluency Evaluator")
 
 # Option to record audio in-browser
 st.subheader("Record Audio (Browser)")
