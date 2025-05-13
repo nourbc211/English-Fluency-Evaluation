@@ -20,5 +20,5 @@ transformers
 # Speech-to-text pipeline
 # (Ensure ffmpeg is installed on system if using certain audio formats)
 
-# GitHub package for audio recording in-browser
-streamlit_audio_recorder @ git+https://github.com/stefanrmmr/streamlit_audio_recorder.git
+# audio recording in-browser
+audio_recorder_streamlit
