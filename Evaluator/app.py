@@ -14,8 +14,8 @@ import io
 # Centered, banner-style logo using Streamlit columns
 col1, col2, col3 = st.columns([1, 5, 1])
 with col2:
-    st.image("Evaluator/logo_sm.png", use_container_width=True)
-
+    st.image("Evaluator/logo_sm.png", width = 300, use_container_width=True)
+st.write("") 
 # title
 st.title("Speech Fluency Evaluator")
 
