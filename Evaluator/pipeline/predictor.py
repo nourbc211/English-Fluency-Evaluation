@@ -17,7 +17,7 @@ def load_model():
     """
     Method to load the model and the top features that were used.
     """
-    model = joblib.load("model/xgb_model.pkl")
+    model = joblib.load("Evaluator/model/xgb_model.pkl")
     with open("model/top_features.json") as f:
         top_features = json.load(f)
     return model, top_features
