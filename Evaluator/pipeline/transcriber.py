@@ -4,7 +4,6 @@
 # Imports
 
 import os
-import glob
 import json
 import torch
 from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
@@ -32,8 +31,8 @@ pipe = pipeline(
 # Transcribe files keeping the same folder structure and filename format as the 
 # audio_files folder
 
-audio_base_dir = 'input/segments'
-transcript_base_dir = 'input/transcripts'
+audio_base_dir = 'Evaluator/input/segments'
+transcript_base_dir = 'Evaluator/input/transcripts'
 def transcribe_with_structure(audio_path, audio_base_dir=audio_base_dir, transcript_base_dir=transcript_base_dir):
     # Determine relative subpath and make transcript path
     rel_path = os.path.relpath(audio_path, audio_base_dir)

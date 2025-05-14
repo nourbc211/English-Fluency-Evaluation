@@ -7,10 +7,14 @@ import librosa
 import parselmouth
 import spacy
 import json
+from language_detector import detect_language
 
+# Directories paths
+segments_dir = 'Evaluator/input/segments/'
+transcripts_dir = 'Evaluator/input/transcripts'
 
 # --- Transcript loader ---
-def load_transcript(audio_path, audio_base_dir='input/segments/', transcript_base_dir='input/transcripts'):
+def load_transcript(audio_path, audio_base_dir=segments_dir, transcript_base_dir=transcripts_dir):
     rel_path = os.path.relpath(audio_path, audio_base_dir)  # relative to base
     rel_dir = os.path.dirname(rel_path)
     base_name = os.path.splitext(os.path.basename(audio_path))[0]
@@ -26,7 +30,7 @@ def load_transcript(audio_path, audio_base_dir='input/segments/', transcript_bas
 
 # --- Text feature extraction ---
 
-# nlp = spacy.load("en_core_web_sm")
+nlp = spacy.load("en_core_web_sm")
 
 
 def extract_text_features(text):
@@ -111,6 +115,12 @@ def extract_all_features(file_path, audio_base_dir, transcript_base_dir):
         print(f"Could not load transcript for {file_path}: {e}")
         text = ""
 
+    # Checking the language
+    lang, conf, is_english = detect_language(text)
+    if lang != 'en':
+        print(f"⛔ Skipping {file_path}: Detected language = {lang}, Confidence = {conf:.2f}")
+        return None
+    
     # Extract all feature types
     acoustic = extract_acoustic_features(file_path)
     pauses = extract_pause_features(y, sr)
@@ -121,7 +131,7 @@ def extract_all_features(file_path, audio_base_dir, transcript_base_dir):
     return features
 
 # We add a function to generate the file with all the features
-def generate_feature_file(audio_dir="input/segments", transcript_dir="input/transcripts", output_path="output/audio_features.npy"):
+def generate_feature_file(audio_dir=segments_dir, transcript_dir=transcripts_dir, output_path="Evaluator/output/audio_features.npy"):
     feature_list = []
     file_list = []
     for root, _, files in os.walk(audio_dir):
