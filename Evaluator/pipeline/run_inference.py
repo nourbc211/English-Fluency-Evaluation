@@ -6,11 +6,29 @@ from live_recording import record_audio, save_audio
 import shutil
 import os
 
+
+
+"""
+# Record audio via mic
+recording, sr = record_audio(duration=10)
+if recording is not None:
+    recorded_path = save_audio(recording, sr, filename="live_input.wav")
+    audio_files = [recorded_path] 
+else:
+    audio_files = []
+"""
+
+#Paths
+audio_path = "Evaluator/input/audios/recorded_audio.wav"
+segment_dir = "Evaluator/input/segments"
+transcript_dir = "Evaluator/input/transcripts"
+
+# ------ Cleaning ------
 def clear_input_folders():
     """
     Method to clean input folders before running the evaluation
     """
-    folders_to_clear = ["input/segments", "input/transcripts"]
+    folders_to_clear = [segment_dir, transcript_dir]
     for folder in folders_to_clear:
         if os.path.exists(folder):
             shutil.rmtree(folder)
@@ -20,24 +38,11 @@ def clear_input_folders():
 # Cleaning the input folders
 clear_input_folders()
 
-# Record audio via mic
-recording, sr = record_audio(duration=10)
-if recording is not None:
-    recorded_path = save_audio(recording, sr, filename="live_input.wav")
-    audio_files = [recorded_path] 
-else:
-    audio_files = []
-
-#Paths
-audio_path = recorded_path
-segment_dir = "input/segments"
-transcript_dir = "input/transcripts"
-
 # segment the audio and save in the segment_dir
 segment_paths = segment_audio(audio_path, segment_dir)
 
 # generating the transcripts
-transcribe_all_audios(audio_base_dir=segment_dir, transcript_base_dir="input/transcripts")
+transcribe_all_audios(audio_base_dir=segment_dir, transcript_base_dir=transcript_dir)
 
 # Feature extraction
 X = generate_feature_file(audio_dir=segment_dir, transcript_dir=transcript_dir)
