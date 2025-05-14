@@ -7,6 +7,7 @@ import librosa
 import parselmouth
 import spacy
 import json
+from language_detector import detect_language
 
 # Directories paths
 segments_dir = 'Evaluator/input/segments/'
@@ -114,6 +115,12 @@ def extract_all_features(file_path, audio_base_dir, transcript_base_dir):
         print(f"Could not load transcript for {file_path}: {e}")
         text = ""
 
+    # Checking the language
+    lang, conf, is_english = detect_language(text)
+    if lang != 'en':
+        print(f"⛔ Skipping {file_path}: Detected language = {lang}, Confidence = {conf:.2f}")
+        return None
+    
     # Extract all feature types
     acoustic = extract_acoustic_features(file_path)
     pauses = extract_pause_features(y, sr)

@@ -4,7 +4,6 @@
 # Imports
 
 import os
-import glob
 import json
 import torch
 from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
