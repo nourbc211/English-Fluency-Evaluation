@@ -116,10 +116,11 @@ def extract_all_features(file_path, audio_base_dir, transcript_base_dir):
         text = ""
 
     # Checking the language
-    lang, conf, is_english = detect_language(text)
-    if lang != 'en':
-        print(f"⛔ Skipping {file_path}: Detected language = {lang}, Confidence = {conf:.2f}")
-        return None
+    is_english = True
+    lang, conf, eng_ratio = detect_language(text)
+    if lang != "english":
+        is_english = False
+        print("Language of the audio is not english")
     
     # Extract all feature types
     acoustic = extract_acoustic_features(file_path)
@@ -128,24 +129,36 @@ def extract_all_features(file_path, audio_base_dir, transcript_base_dir):
     pronunciation = extract_pronunciation_features(file_path)
 
     features = np.hstack([acoustic, pauses, text_features, pronunciation])
-    return features
+    return features, is_english # we return the features and the boolean variable checking the language of the audio
 
 # We add a function to generate the file with all the features
 def generate_feature_file(audio_dir=segments_dir, transcript_dir=transcripts_dir, output_path="Evaluator/output/audio_features.npy"):
     feature_list = []
     file_list = []
+    language_flags = [] # store if the language is in english or not
+
     for root, _, files in os.walk(audio_dir):
         for file in files:
             file_path = os.path.join(root, file)
-            features = extract_all_features(file_path, audio_dir, transcript_dir)
+            features, is_english = extract_all_features(file_path, audio_dir, transcript_dir)
             feature_list.append(features)
+            language_flags.append(int(is_english))
             file_list.append(file_path)
 
     features_array = np.array(feature_list)
     
+    # Saving the features
     print(f"Saving to {output_path}...")
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     np.save(output_path, features_array)
     print(f"✅ Saved features for {len(file_list)} audio files to {output_path}")
+
+    # Saving the language flags
+    lang_flag_path = output_path.replace(".npy", "_lang_flags.txt")
+    with open(lang_flag_path, "w") as f:
+        for flag in language_flags:
+            f.write(f"{flag}\n")
+    print(f"✅ Saved language flags to {lang_flag_path}")
+
     return features_array 
 

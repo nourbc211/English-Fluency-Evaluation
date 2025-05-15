@@ -19,9 +19,10 @@ else:
 """
 
 #Paths
-audio_path = "Evaluator/input/audios/recorded_audio.wav"
+audio_path = "Evaluator/input/audios/hugo.wav"
 segment_dir = "Evaluator/input/segments"
 transcript_dir = "Evaluator/input/transcripts"
+lang_flags_path = "Evaluator/output/audio_features_lang_flags.txt"
 
 # ------ Cleaning ------
 def clear_input_folders():
@@ -47,9 +48,13 @@ transcribe_all_audios(audio_base_dir=segment_dir, transcript_base_dir=transcript
 # Feature extraction
 X = generate_feature_file(audio_dir=segment_dir, transcript_dir=transcript_dir)
 
+# Language flags
+with open(lang_flags_path) as f:
+    lang_flags = [int(line.strip()) for line in f]
+
 # Model prediction and aggregation
 model, top_features = load_model()
-final_label, segment_labels = predict_and_aggregate(X, segment_paths, model, top_features)
+final_label, segment_labels = predict_and_aggregate(X, model, top_features, lang_flags)
 
 
 # Final result

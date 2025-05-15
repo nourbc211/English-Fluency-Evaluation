@@ -14,7 +14,7 @@ from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
 device = "cuda" if torch.cuda.is_available() else "cpu"
 torch_dtype = torch.float16 if device == "cuda" else torch.float32
 
-model_id = "openai/whisper-tiny.en" # slihtly faster than whisper-base
+model_id = "openai/whisper-tiny" # slihtly faster than whisper-base
 model = AutoModelForSpeechSeq2Seq.from_pretrained(model_id, torch_dtype=torch_dtype).to(device)
 processor = AutoProcessor.from_pretrained(model_id)
 
@@ -70,6 +70,3 @@ def transcribe_all_audios(audio_base_dir=audio_base_dir, transcript_base_dir=tra
             audio_path = os.path.join(subdir, file)
             transcribe_with_structure(audio_path, audio_base_dir, transcript_base_dir)
     print("All transcripts saved.")
-
-
-

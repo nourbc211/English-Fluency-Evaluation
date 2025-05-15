@@ -1,28 +1,23 @@
-# Language detector script
-# language_detector.py
-import fasttext
-import os
+from lingua import Language, LanguageDetectorBuilder
+import re
 
-MODEL_PATH = "Evaluator/lid.176.ftz"
+# Build detector
+detector = LanguageDetectorBuilder.from_all_languages().build()
 
-# Download the model if it doesn't exist yet
-if not os.path.exists(MODEL_PATH):
-    import urllib.request
-    print("Downloading FastText language ID model...")
-    urllib.request.urlretrieve(
-        "https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.ftz",
-        MODEL_PATH
-    )
+def english_word_ratio(text):
+    tokens = re.findall(r"\b\w+\b", text.lower())
+    english_vocab = set(["the", "and", "is", "to", "of", "you", "this", "that", "have", "it"])  # fallback without NLTK
+    if not tokens:
+        return 0.0
+    english_count = sum(1 for token in tokens if token in english_vocab)
+    return english_count / len(tokens)
 
-# Load the model
-lang_model = fasttext.load_model(MODEL_PATH)
+def detect_language(text, word_threshold=0.80):
+    if len(text.split()) < 3:
+        return "unknown", 0.0, 0.0, False
 
-# Detection model method
-def detect_language(text, threshold=0.90):
-    """
-    Returns (lang_code, confidence, is_english_bool)
-    """
-    label, conf = lang_model.predict(text)
-    lang = label[0].replace("__label__", "")
-    confidence = float(conf[0])  # force cast to avoid numpy issues
-    return lang, confidence, lang == "en" and confidence >= threshold
+    detected = detector.detect_language_of(text)
+    confidence = detector.compute_language_confidence(text, Language.ENGLISH)
+    eng_ratio = english_word_ratio(text)
+    
+    return detected.name.lower(), confidence, eng_ratio
