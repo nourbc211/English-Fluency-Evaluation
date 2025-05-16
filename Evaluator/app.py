@@ -4,8 +4,6 @@ import shutil
 import io
 import torch
 import torchaudio
-import numpy as np
-import pandas as pd
 import soundfile as sf
 
 # App modules
