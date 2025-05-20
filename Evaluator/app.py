@@ -89,5 +89,5 @@ if audio_path:
 
     # ---- Load model + predict using lang flags ----
     model, top_features = load_model()
-    final_label, segment_labels = predict_and_aggregate(X, segment_paths, model, top_features, lang_flags)
+    final_label, segment_labels = predict_and_aggregate(X, model, top_features, lang_flags)
     st.success(f"🧠 Predicted Fluency Level: {final_label}")
