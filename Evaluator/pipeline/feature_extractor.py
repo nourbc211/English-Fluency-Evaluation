@@ -7,7 +7,7 @@ import librosa
 import parselmouth
 import spacy
 import json
-from language_detector import detect_language
+from pipeline.language_detector import detect_language
 
 # Directories paths
 segments_dir = 'Evaluator/input/segments/'
