@@ -3,8 +3,6 @@ import os
 import shutil
 import io
 import torch
-torch.classes.__path__ = [] # to avoid crashes in streamlit
-
 import torchaudio
 import soundfile as sf
 

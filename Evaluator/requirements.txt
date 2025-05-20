@@ -1,31 +1,25 @@
-# Web app interface
-streamlit
-audio_recorder_streamlit  # in-browser audio recording
+# Streamlit
+streamlit==1.45.1
+audio_recorder_streamlit==0.0.10
 
-# Audio processing
+# Audio
+torch==2.2.1
+torchaudio==2.2.1
 librosa
-praat-parselmouth
 soundfile
-torchaudio==2.7.0  # required to match torch==2.7.0
+praat-parselmouth
 
-# Data manipulation
-numpy==2.1.0
-pandas
+# ML
+xgboost==3.0.0
 joblib
+scikit-learn
+pandas
+numpy==1.26.4  # Compatible with all libs
 
-# NLP & Speech Models
-spacy
-torch==2.7.0
-transformers
-
-# Language detection
+# NLP
+transformers==4.39.3
+spacy==3.7.2
 lingua-language-detector==1.1.1
 
-# ML model
-xgboost==3.0.0
-
-# spacy model
+# spaCy model
 https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
-
-# Optional system requirement:
-# ffmpeg must be installed on the host for full audio format support.
