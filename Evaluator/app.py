@@ -31,11 +31,16 @@ except ImportError:
     audio_bytes = None
     st.info("To enable in-browser recording, install: pip install audio_recorder_streamlit")
 
-os.makedirs("input/audios", exist_ok=True)
+# Path of the input folder
+base_input_paths = "Evaluator/input"
+
+# audios path
+os.makedirs(base_input_paths + "/audios", exist_ok=True)
 recorded_audio_path = None
 
+# Store audio
 if audio_bytes is not None and len(audio_bytes) > 0:
-    recorded_audio_path = os.path.join("input/audios", "recorded_audio.wav")
+    recorded_audio_path = os.path.join(base_input_paths + "/audios", "recorded_audio.wav")
     with open(recorded_audio_path, "wb") as f:
         f.write(audio_bytes)
 
@@ -53,7 +58,7 @@ st.subheader("Or Upload a WAV audio file")
 audio_file = st.file_uploader("Upload a WAV audio file", type=["wav"])
 
 audio_path = recorded_audio_path if recorded_audio_path else (
-    os.path.join("input/audios", audio_file.name) if audio_file else None
+    os.path.join(base_input_paths + "/audios", audio_file.name) if audio_file else None
 )
 
 if audio_file and not recorded_audio_path:
@@ -64,21 +69,21 @@ if audio_file and not recorded_audio_path:
 # ---- If we have an audio, proceed ----
 if audio_path:
     # ---- Clear segments/transcripts ----
-    for folder in ["input/segments", "input/transcripts"]:
+    for folder in [base_input_paths + "/segments", base_input_paths + "/transcripts"]:
         if os.path.exists(folder):
             shutil.rmtree(folder)
         os.makedirs(folder)
 
     # ---- Segment audio ----
-    segment_paths = segment_audio(audio_path, "input/segments")
+    segment_paths = segment_audio(audio_path, base_input_paths + "/segments")
     st.write(f"📊 Segmented into {len(segment_paths)} segments.")
 
     # ---- Transcribe segments ----
-    transcribe_all_audios(audio_base_dir="input/segments", transcript_base_dir="input/transcripts")
+    transcribe_all_audios()
     st.write("📝 Transcription complete.")
 
     # ---- Feature extraction ----
-    X = generate_feature_file(audio_dir="input/segments", transcript_dir="input/transcripts")
+    X = generate_feature_file()
     st.write("🔬 Feature extraction complete.")
 
     # ---- Load language flags ----
