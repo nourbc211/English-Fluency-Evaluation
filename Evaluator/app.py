@@ -89,7 +89,7 @@ if audio_path:
 
     input_features = processor.feature_extractor(waveform.squeeze().numpy(), sampling_rate=sr, return_tensors="pt").input_features.to(device)
     lang_probs = model.detect_language(input_features)
-    lang_ids = processor.tokenizer.convert_ids_to_tokens(lang_probs[0].topk(5).indices)
+    lang_ids = processor.tokenizer.convert_ids_to_tokens(lang_probs[0].topk(1).indices)
 
     detected_lang = lang_ids[0]
     confidence = lang_probs[0].softmax(dim=-1).max().item()
