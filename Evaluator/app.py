@@ -3,6 +3,8 @@ import os
 import shutil
 import io
 import soundfile as sf
+import torch
+torch.classes.__path__ = []  # 🛠️ workaround to avoid Streamlit crash
 
 # App modules
 from pipeline.segmenter import segment_audio
