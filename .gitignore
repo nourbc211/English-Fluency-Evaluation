@@ -1,7 +1,7 @@
-# Ignore temporary audio/transcription data
-Evaluator/input/*
-Evaluator/output/*
+# Ignore audio and intermediate data
+Evaluator/input/
+Evaluator/output/
 
-# keeping the folders themselves
-!Evaluator/input/.gitkeep
-!Evaluator/output/.gitkeep
+# Ignore Python cache files
+__pycache__/
+*.pyc
