@@ -87,21 +87,6 @@ if audio_path:
         waveform = F.resample(waveform, orig_freq=sr, new_freq=16000)
         sr = 16000
 
-    input_features = processor.feature_extractor(waveform.squeeze().numpy(), sampling_rate=sr, return_tensors="pt").input_features.to(device)
-    lang_probs = model.detect_language(input_features)
-    lang_ids_tensor = lang_probs[0].topk(1).indices
-    lang_ids = processor.tokenizer.convert_ids_to_tokens(lang_ids_tensor.tolist())
-
-    detected_lang = lang_ids[0]
-    confidence = lang_probs[0].softmax(dim=-1).max().item()
-
-    st.write(f"🌍 Detected language: **{detected_lang}** (Confidence: {confidence:.2f})")
-
-    if detected_lang != "en" or confidence < 0.80:
-        st.error("❌ This audio is not confidently in English — predicted fluency level is automatically set to **Low**.")
-        st.success("Predicted Fluency Level: Low")
-        st.stop()
-
     # ---- Clear segments/transcripts ----
     for folder in ["input/segments", "input/transcripts"]:
         if os.path.exists(folder):
@@ -120,7 +105,12 @@ if audio_path:
     X = generate_feature_file(audio_dir="input/segments", transcript_dir="input/transcripts")
     st.write("🔬 Feature extraction complete.")
 
-    # ---- Load model + predict ----
+    # ---- Load language flags ----
+    lang_flags_path = "Evaluator/output/audio_features_lang_flags.txt"
+    with open(lang_flags_path) as f:
+        lang_flags = [int(line.strip()) for line in f]
+
+    # ---- Load model + predict using lang flags ----
     model, top_features = load_model()
-    final_label, segment_labels = predict_and_aggregate(X, segment_paths, model, top_features)
+    final_label, segment_labels = predict_and_aggregate(X, segment_paths, model, top_features, lang_flags)
     st.success(f"🧠 Predicted Fluency Level: {final_label}")
