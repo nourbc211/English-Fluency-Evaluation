@@ -1,0 +1,7 @@
+# Ignore temporary audio/transcription data
+Evaluator/input/*
+Evaluator/output/*
+
+# keeping the folders themselves
+!Evaluator/input/.gitkeep
+!Evaluator/output/.gitkeep
