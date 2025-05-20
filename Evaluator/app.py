@@ -11,6 +11,8 @@ import io
 import torch
 import torchaudio
 import soundfile as sf
+import torchaudio.functional as F
+
 
 # App modules
 from pipeline.segmenter import segment_audio
@@ -79,10 +81,10 @@ if audio_path:
     model = AutoModelForSpeechSeq2Seq.from_pretrained(model_id, torch_dtype=torch_dtype).to(device)
     processor = AutoProcessor.from_pretrained(model_id)
 
+
     waveform, sr = torchaudio.load(audio_path)
     if sr != 16000:
-        resampler = torchaudio.transforms.Resample(orig_freq=sr, new_freq=16000)
-        waveform = resampler(waveform)
+        waveform = F.resample(waveform, orig_freq=sr, new_freq=16000)
         sr = 16000
 
     input_features = processor.feature_extractor(waveform.squeeze().numpy(), sampling_rate=sr, return_tensors="pt").input_features.to(device)
