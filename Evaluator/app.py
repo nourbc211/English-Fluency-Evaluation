@@ -4,22 +4,21 @@ try:
     asyncio.get_running_loop()
 except RuntimeError:
     asyncio.set_event_loop(asyncio.new_event_loop())
+
 import streamlit as st
 import os
 import shutil
 import io
 import torch
 import torchaudio
-import soundfile as sf
 import torchaudio.functional as F
-
+import soundfile as sf
 
 # App modules
 from pipeline.segmenter import segment_audio
 from pipeline.feature_extractor import generate_feature_file
 from pipeline.predictor import load_model, predict_and_aggregate
 from pipeline.transcriber import transcribe_all_audios
-from transformers import AutoProcessor, AutoModelForSpeechSeq2Seq
 
 # ---- Streamlit layout ----
 col1, col2, col3 = st.columns([1, 5, 1])
@@ -74,19 +73,6 @@ if audio_file and not recorded_audio_path:
 
 # ---- If we have an audio, proceed ----
 if audio_path:
-    # ---- Whisper language detection (before segmenting) ----
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    torch_dtype = torch.float16 if device == "cuda" else torch.float32
-    model_id = "openai/whisper-tiny"
-    model = AutoModelForSpeechSeq2Seq.from_pretrained(model_id, torch_dtype=torch_dtype).to(device)
-    processor = AutoProcessor.from_pretrained(model_id)
-
-
-    waveform, sr = torchaudio.load(audio_path)
-    if sr != 16000:
-        waveform = F.resample(waveform, orig_freq=sr, new_freq=16000)
-        sr = 16000
-
     # ---- Clear segments/transcripts ----
     for folder in ["input/segments", "input/transcripts"]:
         if os.path.exists(folder):
