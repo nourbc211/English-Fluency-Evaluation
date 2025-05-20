@@ -12,9 +12,9 @@ def english_word_ratio(text):
     english_count = sum(1 for token in tokens if token in english_vocab)
     return english_count / len(tokens)
 
-def detect_language(text, word_threshold=0.80):
+def detect_language(text):
     if len(text.split()) < 3:
-        return "unknown", 0.0, 0.0, False
+        return "unknown", 0.0, 0.0
 
     detected = detector.detect_language_of(text)
     confidence = detector.compute_language_confidence(text, Language.ENGLISH)
