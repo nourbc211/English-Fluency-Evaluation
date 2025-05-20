@@ -19,7 +19,7 @@ else:
 """
 
 #Paths
-audio_path = "Evaluator/input/audios/hugo.wav"
+audio_path = "Evaluator/input/audios/live_input.wav"
 segment_dir = "Evaluator/input/segments"
 transcript_dir = "Evaluator/input/transcripts"
 lang_flags_path = "Evaluator/output/audio_features_lang_flags.txt"

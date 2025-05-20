@@ -87,7 +87,7 @@ if audio_path:
     with open(lang_flags_path) as f:
         lang_flags = [int(line.strip()) for line in f]
 
-    # ---- Load model + predict using lang flags ----
+    # Model prediction and aggregation
     model, top_features = load_model()
     final_label, segment_labels = predict_and_aggregate(X, model, top_features, lang_flags)
     st.success(f"🧠 Predicted Fluency Level: {final_label}")
