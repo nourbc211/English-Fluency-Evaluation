@@ -1,16 +1,7 @@
-# Avoid crash from torch introspection
-import asyncio
-try:
-    asyncio.get_running_loop()
-except RuntimeError:
-    asyncio.set_event_loop(asyncio.new_event_loop())
-
 import streamlit as st
 import os
 import shutil
 import io
-import torch
-import torchaudio
 import torchaudio.functional as F
 import soundfile as sf
 
