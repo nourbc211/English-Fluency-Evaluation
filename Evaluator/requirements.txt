@@ -3,8 +3,8 @@ streamlit==1.45.1
 audio_recorder_streamlit==0.0.10
 
 # Audio
-torch==2.2.1
-torchaudio==2.2.1
+torch==2.7.0
+torchaudio==2.7.0
 librosa
 soundfile
 praat-parselmouth
