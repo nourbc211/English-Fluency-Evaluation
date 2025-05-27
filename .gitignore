@@ -1,6 +1,6 @@
 # Ignore audio and intermediate data
-Evaluator/input/
-Evaluator/output/
+#Evaluator/input/
+#Evaluator/output/
 
 # Ignore Python cache files
 __pycache__/
