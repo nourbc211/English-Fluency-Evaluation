@@ -117,7 +117,12 @@ def extract_all_features(file_path, audio_base_dir, transcript_base_dir):
 
     # Checking the language
     is_english = True
+    ## Debugging output
+    print(f"\n🔎 Checking language for text: {text[:100]}...")
     lang, conf, eng_ratio = detect_language(text)
+    print(f"🔤 Language: {lang} | Confidence: {conf:.2f} | English Ratio: {eng_ratio:.2f}")
+    print(f"📝 Transcript length: {len(text.split())} words")
+    #lang, _, _ = detect_language(text)
     if lang != "english":
         is_english = False
         print("Language of the audio is not english")
