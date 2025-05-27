@@ -6,11 +6,18 @@ import soundfile as sf
 import torch
 torch.classes.__path__ = []  # 🛠️ workaround to avoid Streamlit crash
 
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 # App modules
 from pipeline.segmenter import segment_audio
 from pipeline.feature_extractor import generate_feature_file
 from pipeline.predictor import load_model, predict_and_aggregate
 from pipeline.transcriber import transcribe_all_audios
+
+
+# dummy variable to avoid bugs
+model_loaded = False
 
 # ---- Streamlit layout ----
 col1, col2, col3 = st.columns([1, 5, 1])
@@ -95,5 +102,55 @@ if audio_path:
 
     # Model prediction and aggregation
     model, top_features = load_model()
+    model_loaded = True
     final_label, segment_labels = predict_and_aggregate(X, model, top_features, lang_flags)
+
+    # DEBUG: Log model inputs and predictions
+    print("🧩 Segment-level predictions:", segment_labels)
+    print("🧠 Final predicted label:", final_label)
+    print("📊 Top features:", top_features)
+    print("📋 Language flags:", lang_flags)
+    print("🔬 Feature matrix shape:", X.shape)
+    print("🔬 Sample feature values:", X[0] if len(X) > 0 else "No features extracted")
+
+    # Also show in Streamlit for quick inspection
+    st.text(f"🧩 Segment-level predictions: {segment_labels}")
+    st.text(f"🧠 Final label: {final_label}")
+    
     st.success(f"🧠 Predicted Fluency Level: {final_label}")
+
+
+# -----Feature explanation graph-----
+if model_loaded : 
+
+    full_feature_list = (
+    [f"MFCC_{i}" for i in range(20)] +              # 20 MFCCs
+    ["RMSE", "ZCR", "Spectral_Flux", "Pitch_Mean", "Pitch_Std", "Speech_Rate",
+    "Pause_Duration", "Num_Pauses", "Pause_Ratio", "Pause_too_long", "Avg_Sentence_Length",
+    "Vocab_Richness", "Jitter", "Shimmer", "HNR"]  # 5 pronunciation features
+)
+    df = pd.DataFrame(X, columns=full_feature_list)  # list from original extractor
+    X_selected = df[top_features]
+
+    # Column names
+    feature_names = top_features
+
+    # Get the mean feature values across segments
+    mean_features = X_selected.mean(axis=0)
+
+    # Create DataFrame
+    df_features = pd.DataFrame({
+        "Feature": feature_names,
+        "Value": mean_features
+    })
+
+    # ---- Plot feature values ----
+    st.subheader("🧪 Feature Values of the Evaluated Audio")
+
+    # Bar chart
+    st.bar_chart(df_features.set_index("Feature"))
+
+    # show data table as well
+    with st.expander("Show raw feature values"):
+        st.dataframe(df_features)
+
