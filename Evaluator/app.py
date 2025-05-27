@@ -105,7 +105,7 @@ if audio_path:
     model_loaded = True
     final_label, segment_labels = predict_and_aggregate(X, model, top_features, lang_flags)
 
-    # DEBUG: Log model inputs and predictions
+    # DEBUG: Log model inputs and predictions for local 
     print("🧩 Segment-level predictions:", segment_labels)
     print("🧠 Final predicted label:", final_label)
     print("📊 Top features:", top_features)
@@ -114,9 +114,14 @@ if audio_path:
     print("🔬 Sample feature values:", X[0] if len(X) > 0 else "No features extracted")
 
     # Also show in Streamlit for quick inspection
-    st.text(f"🧩 Segment-level predictions: {segment_labels}")
-    st.text(f"🧠 Final label: {final_label}")
-    
+    st.subheader("🧪 Debug Info")
+    st.write("Segment-level predictions:", segment_labels)
+    st.write("Final label:", final_label)
+    st.write("Top features:", top_features)
+    st.write("Language flags:", lang_flags)
+    st.write("Feature shape:", X.shape)
+    st.write("First feature vector:", X[0].tolist() if len(X) > 0 else "No data")
+
     st.success(f"🧠 Predicted Fluency Level: {final_label}")
 
 
