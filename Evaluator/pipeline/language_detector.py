@@ -17,7 +17,6 @@ def detect_language(text):
         return "unknown", 0.0, 0.0
 
     detected = detector.detect_language_of(text)
-    confidence = detector.compute_language_confidence(text, Language.ENGLISH)
     eng_ratio = english_word_ratio(text)
     
-    return detected.name.lower(), confidence, eng_ratio
+    return detected.name.lower(), eng_ratio
