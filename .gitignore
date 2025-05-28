@@ -1,7 +1,7 @@
 # Ignore audio and intermediate data
 #Evaluator/input/
 #Evaluator/output/
-
+.DS_Store
 # Ignore Python cache files
 __pycache__/
 *.pyc
