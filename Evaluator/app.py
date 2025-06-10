@@ -114,7 +114,7 @@ if audio_path:
         st.stop()  # Stop further processing
 
     # If language is English, we proceed with the evaluation
-    st.success(f"✅ Detected language is '{language}' with English ratio {english_ratio:.2f}. Proceeding with evaluation...")
+    st.success(f"✅ Detected language is '{language}'. Proceeding with evaluation...")
 
     # ---- Feature extraction ----
     X = generate_feature_file()
