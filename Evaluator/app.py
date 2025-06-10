@@ -108,13 +108,13 @@ if audio_path:
    
    # If language is not English, we skip the evaluation and final label is automatically set to Low
     if language != "english":
-        st.warning(f"⚠️ Detected language is '{language}'. Evaluation will be skipped.")
+        st.warning(f"⚠️ Detected language is '{language}' with English ratio {english_ratio:.2f} Evaluation will be skipped.")
         st.success("🧠 Predicted Fluency Level: Low")
         model_loaded = True
         st.stop()  # Stop further processing
 
     # If language is English, we proceed with the evaluation
-    st.success(f"✅ Detected language is '{language}'. Proceeding with evaluation...")
+    st.success(f"✅ Detected language is '{language}' with English ratio {english_ratio:.2f} . Proceeding with evaluation...")
 
     # ---- Feature extraction ----
     X = generate_feature_file()
