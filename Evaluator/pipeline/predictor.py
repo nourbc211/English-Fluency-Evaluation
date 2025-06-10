@@ -22,7 +22,7 @@ def load_model():
         top_features = json.load(f)
     return model, top_features
 
-def predict_and_aggregate(X, model, top_features, lang_flags=None):
+def predict_and_aggregate(X, model, top_features):
     """
     Predicting and aggregating the results.
     """
@@ -31,14 +31,6 @@ def predict_and_aggregate(X, model, top_features, lang_flags=None):
 
     preds = model.predict(X_selected)
     labels = np.array(['Low', 'Intermediate', 'High'])[preds]
-
-    # Language detetction check
-    if lang_flags is not None :
-        # if lang is not english => we automatically flag to Low 
-        labels = np.array([
-            'Low' if lang_flags[i] == 0 else labels[i]
-            for i in range(len(labels))
-        ])
     
     # Majority vote over the segments' labels
     majority = pd.Series(labels).value_counts().idxmax()
