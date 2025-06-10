@@ -109,25 +109,35 @@ if audio_path:
     st.text(" ".join(transcripts))
 
     # Detect language of the full transcript
+    st.subheader("Language Detection")
     language, lang_conf = detect_language(" ".join(transcripts))
 
-    # Language per segment
-    st.subheader("Language Detection")
-    st.markdown("### Detected Language:")
+    # If language is not English, we skip the evaluation and final label is automatically set to Low
+    if language != "english":
+        st.warning(f"⚠️ Detected language is '{language}' with confidence {lang_conf:.2f} Evaluation will be skipped.")
+        st.success("🧠 Predicted Fluency Level: Low")
+        model_loaded = True
+        st.stop()  # Stop further processing    
+    
+    # Language per segment : if one segment is not English, we skip the evaluation
+    st.subheader("Language Detection per Segment")
+    lang_not_english = False
     for transcript_file in glob.glob(os.path.join(base_transcript_path, "*.json")):
         with open(transcript_file, "r") as f:
             data = json.load(f)
             segment_text = data["text"]
             seg_lang, seg_conf = detect_language(segment_text)
+            if seg_lang != "english":
+                lang_not_english = True
             st.write(f"Segment: {os.path.basename(transcript_file)}")
             st.write(f"Detected Language: {seg_lang} (Confidence: {seg_conf:.2f})")
    
-   # If language is not English, we skip the evaluation and final label is automatically set to Low
-    if language != "english":
-        st.warning(f"⚠️ Detected language is '{language}' with confidence {lang_conf:.2f} Evaluation will be skipped.")
+    if lang_not_english:
+        st.warning("⚠️ At least one segment is not in English. Evaluation will be skipped.")
         st.success("🧠 Predicted Fluency Level: Low")
         model_loaded = True
         st.stop()  # Stop further processing
+   
 
     # If language is English, we proceed with the evaluation
     st.success(f"✅ Detected language is '{language}' with confidence {lang_conf:.2f} . Proceeding with evaluation...")
