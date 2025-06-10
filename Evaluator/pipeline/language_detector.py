@@ -25,7 +25,7 @@ def english_language_score(text):
         return 0.0, []
 
     scores = detector.compute_language_confidence_values(text)
-    score_dict = {r.language.name.lower(): r.value for r in scores}
+    score_dict = {lang.name.lower(): value for lang, value in scores}
     top_langs = sorted(score_dict.items(), key=lambda x: x[1], reverse=True)
 
     english_score = score_dict.get("english", 0.0)
