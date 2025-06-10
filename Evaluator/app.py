@@ -120,15 +120,10 @@ if audio_path:
     X = generate_feature_file()
     st.write("🔬 Feature extraction complete.")
 
-    # ---- Load language flags ----
-    lang_flags_path = "Evaluator/output/audio_features_lang_flags.txt"
-    with open(lang_flags_path) as f:
-        lang_flags = [int(line.strip()) for line in f]
-
     # Model prediction and aggregation
     model, top_features = load_model()
     model_loaded = True
-    final_label, segment_labels = predict_and_aggregate(X, model, top_features, lang_flags)
+    final_label, segment_labels = predict_and_aggregate(X, model, top_features)
 
 
     st.success(f"🧠 Predicted Fluency Level: {final_label}")
