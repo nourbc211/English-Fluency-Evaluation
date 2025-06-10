@@ -103,18 +103,23 @@ if audio_path:
             data = json.load(f)
             transcripts.append(data["text"])
     
+    # ---- Show transcripts ----
+    st.subheader("Transcripts of Segments")
+    st.markdown("### 📝 Transcript:")
+    st.text(" ".join(transcripts))
+    
     # Detect language of the full transcript
-    language, english_ratio = detect_language(" ".join(transcripts))
+    language, lang_conf = detect_language(" ".join(transcripts))
    
    # If language is not English, we skip the evaluation and final label is automatically set to Low
     if language != "english":
-        st.warning(f"⚠️ Detected language is '{language}' with English ratio {english_ratio:.2f} Evaluation will be skipped.")
+        st.warning(f"⚠️ Detected language is '{language}' with English ratio {lang_conf:.2f} Evaluation will be skipped.")
         st.success("🧠 Predicted Fluency Level: Low")
         model_loaded = True
         st.stop()  # Stop further processing
 
     # If language is English, we proceed with the evaluation
-    st.success(f"✅ Detected language is '{language}' with English ratio {english_ratio:.2f} . Proceeding with evaluation...")
+    st.success(f"✅ Detected language is '{language}' with English ratio {lang_conf:.2f} . Proceeding with evaluation...")
 
     # ---- Feature extraction ----
     X = generate_feature_file()

@@ -7,16 +7,6 @@ import os
 # Build detector (lingua)
 detector = LanguageDetectorBuilder.from_all_languages().build()
 
-# ---- Helper function to calculate English word ratio ----
-def english_word_ratio(text):
-    tokens = re.findall(r"\b\w+\b", text.lower())
-    english_vocab = set(["the", "and", "is", "to", "of", "you", "this", "that", "have", "it"])  # fallback without NLTK
-    if not tokens:
-        return 0.0
-    english_count = sum(1 for token in tokens if token in english_vocab)
-    return english_count / len(tokens)
-
-
 def english_language_score(text):
     """
     Returns the confidence score of English and the top-2 languages with their scores.
@@ -39,9 +29,9 @@ def detect_language(text):
         return "unknown", 0.0 
     
     detected = detector.detect_language_of(text)
-    eng_ratio = english_language_score(text)[0]
+    lang_confidence = english_language_score(text)[0]
     
-    return detected.name.lower(), eng_ratio
+    return detected.name.lower(), lang_confidence
 
 
 
