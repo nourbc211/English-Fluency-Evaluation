@@ -4,6 +4,8 @@ import shutil
 import io
 import soundfile as sf
 import torch
+import glob
+import json
 torch.classes.__path__ = []  # 🛠️ workaround to avoid Streamlit crash
 
 import matplotlib.pyplot as plt
@@ -14,6 +16,7 @@ from pipeline.segmenter import segment_audio
 from pipeline.feature_extractor import generate_feature_file
 from pipeline.predictor import load_model, predict_and_aggregate
 from pipeline.transcriber import transcribe_all_audios
+from pipeline.language_detector import detect_language
 
 
 # dummy variable to avoid bugs
@@ -90,6 +93,28 @@ if audio_path:
     # ---- Transcribe segments ----
     transcribe_all_audios()
     st.write("📝 Transcription complete.")
+
+    # -- Language detection ----
+    # Aggregating transcripts for language detection
+    transcripts = []
+    base_transcript_path = "Evaluator/input/transcripts"
+    for transcript_file in glob.glob(os.path.join(base_transcript_path, "*.json")):
+        with open(transcript_file, "r") as f:
+            data = json.load(f)
+            transcripts.append(data["text"])
+    
+    # Detect language of the full transcript
+    language, english_ratio = detect_language(" ".join(transcripts))
+   
+   # If language is not English, we skip the evaluation and final label is automatically set to Low
+    if language != "en":
+        st.warning(f"⚠️ Detected language is '{language}' with English ratio {english_ratio:.2f}.")
+        st.success("🧠 Predicted Fluency Level: Low")
+        model_loaded = True
+        st.stop()  # Stop further processing
+        
+    # If language is English, we proceed with the evaluation
+    st.success(f"✅ Detected language is '{language}' with English ratio {english_ratio:.2f}. Proceeding with evaluation...")
 
     # ---- Feature extraction ----
     X = generate_feature_file()
