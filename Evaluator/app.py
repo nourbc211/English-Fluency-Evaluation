@@ -107,12 +107,12 @@ if audio_path:
     language, english_ratio = detect_language(" ".join(transcripts))
    
    # If language is not English, we skip the evaluation and final label is automatically set to Low
-    if language != "en":
+    if language != "english":
         st.warning(f"⚠️ Detected language is '{language}' with English ratio {english_ratio:.2f}.")
         st.success("🧠 Predicted Fluency Level: Low")
         model_loaded = True
         st.stop()  # Stop further processing
-        
+
     # If language is English, we proceed with the evaluation
     st.success(f"✅ Detected language is '{language}' with English ratio {english_ratio:.2f}. Proceeding with evaluation...")
 
