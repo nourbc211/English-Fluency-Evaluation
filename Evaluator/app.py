@@ -94,7 +94,7 @@ if audio_path:
     transcribe_all_audios()
     st.write("📝 Transcription complete.")
 
-    # ---- Language detection ----
+    # ---- Show full transcript ----
     # Aggregating transcripts for language detection
     transcripts = []
     base_transcript_path = "Evaluator/input/transcripts"
@@ -103,8 +103,7 @@ if audio_path:
             data = json.load(f)
             transcripts.append(data["text"])
     
-    # ---- Show transcripts ----
-    st.subheader("Transcripts of Segments")
+    
     st.markdown("### 📝 Transcript:")
     st.text(" ".join(transcripts))
 
@@ -119,7 +118,7 @@ if audio_path:
         st.stop()  # Stop further processing    
     
     # Language per segment : if one segment is not English, we skip the evaluation
-    st.subheader("Language Detection per Segment")
+    st.subheader("Language Detection")
     lang_not_english = False
     for transcript_file in glob.glob(os.path.join(base_transcript_path, "*.json")):
         with open(transcript_file, "r") as f:
@@ -132,7 +131,7 @@ if audio_path:
             st.write(f"Detected Language: {seg_lang} (Confidence: {seg_conf:.2f})")
    
     if lang_not_english:
-        st.warning("⚠️ At least one segment is not in English. Evaluation will be skipped.")
+        st.warning("⚠️ At least one segment is not in English.")
         st.success("🧠 Predicted Fluency Level: Low")
         model_loaded = True
         st.stop()  # Stop further processing
