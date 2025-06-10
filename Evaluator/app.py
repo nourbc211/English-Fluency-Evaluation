@@ -109,7 +109,6 @@ if audio_path:
     st.text(" ".join(transcripts))
 
     # Detect language of the full transcript
-    st.subheader("Language Detection")
     language, lang_conf = detect_language(" ".join(transcripts))
 
     # If language is not English, we skip the evaluation and final label is automatically set to Low
