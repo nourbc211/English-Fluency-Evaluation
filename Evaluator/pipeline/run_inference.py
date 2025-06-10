@@ -57,17 +57,17 @@ for transcript_file in glob.glob(os.path.join(base_transcript_path, "*.json")):
         data = json.load(f)
         transcripts.append(data["text"])
     
-language, english_ratio = detect_language(" ".join(transcripts))
+language, lang_conf = detect_language(" ".join(transcripts))
 
 # If language is not English, we skip the evaluation and final label is automatically set to Low
 if language != "english":
-    print(f"⚠️ Detected language is '{language}' with English ratio {english_ratio:.2f}")
+    print(f"⚠️ Detected language is '{language}' with confidence {lang_conf:.2f}")
     final_label = "Low"
     segment_labels = ["Low"] * len(segment_paths)
     print(f"🧠 Predicted Fluency Level: {final_label}")
     exit(0)
 # If language is English, we proceed with the evaluation
-print(f"✅ Detected language is '{language}' with English ratio {english_ratio:.2f}. Proceeding with evaluation...")
+print(f"✅ Detected language is '{language}' with confidence {lang_conf:.2f}. Proceeding with evaluation...")
 # ---- Feature extraction ----
 print("🔬 Extracting features from audio segments...")
 

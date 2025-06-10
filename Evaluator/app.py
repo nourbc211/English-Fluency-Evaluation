@@ -94,7 +94,7 @@ if audio_path:
     transcribe_all_audios()
     st.write("📝 Transcription complete.")
 
-    # -- Language detection ----
+    # ---- Language detection ----
     # Aggregating transcripts for language detection
     transcripts = []
     base_transcript_path = "Evaluator/input/transcripts"
@@ -107,19 +107,30 @@ if audio_path:
     st.subheader("Transcripts of Segments")
     st.markdown("### 📝 Transcript:")
     st.text(" ".join(transcripts))
-    
+
     # Detect language of the full transcript
     language, lang_conf = detect_language(" ".join(transcripts))
+
+    # Language per segment
+    st.subheader("Language Detection")
+    st.markdown("### Detected Language:")
+    for transcript_file in glob.glob(os.path.join(base_transcript_path, "*.json")):
+        with open(transcript_file, "r") as f:
+            data = json.load(f)
+            segment_text = data["text"]
+            seg_lang, seg_conf = detect_language(segment_text)
+            st.write(f"Segment: {os.path.basename(transcript_file)}")
+            st.write(f"Detected Language: {seg_lang} (Confidence: {seg_conf:.2f})")
    
    # If language is not English, we skip the evaluation and final label is automatically set to Low
     if language != "english":
-        st.warning(f"⚠️ Detected language is '{language}' with English ratio {lang_conf:.2f} Evaluation will be skipped.")
+        st.warning(f"⚠️ Detected language is '{language}' with confidence {lang_conf:.2f} Evaluation will be skipped.")
         st.success("🧠 Predicted Fluency Level: Low")
         model_loaded = True
         st.stop()  # Stop further processing
 
     # If language is English, we proceed with the evaluation
-    st.success(f"✅ Detected language is '{language}' with English ratio {lang_conf:.2f} . Proceeding with evaluation...")
+    st.success(f"✅ Detected language is '{language}' with confidence {lang_conf:.2f} . Proceeding with evaluation...")
 
     # ---- Feature extraction ----
     X = generate_feature_file()
