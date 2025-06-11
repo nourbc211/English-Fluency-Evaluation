@@ -195,10 +195,8 @@ if model_loaded :
         if "MFCC" in feature:
             if not mfcc_explained:
                 explanation = FEATURE_DESCRIPTIONS.get("MFCC", "No explanation available.")
-                st.markdown(f"**{feature}**: `{value:.2f}`  \n*{explanation}*")
+                st.markdown(f"**{"MFCC"}**: \n*{explanation}*")
                 mfcc_explained = True
-            else:
-                st.markdown(f"**{feature}**: `{value:.2f}`")
         else:
             explanation = FEATURE_DESCRIPTIONS.get(feature, "No explanation available.")
             st.markdown(f"**{feature}**: `{value:.2f}`  \n*{explanation}*")
