@@ -189,10 +189,17 @@ if model_loaded :
     
     # ---- Feature descriptions ----
     st.subheader("ℹ️ Feature Descriptions")
+
+    mfcc_explained = False  # Flag to avoid repeating MFCC explanation
     for feature, value in zip(top_features, X[0]):
         if "MFCC" in feature:
-            # For MFCCs, we show a warning since they are not explained in the feature descriptions
-            FEATURE_DESCRIPTIONS.get("MFCC")
-        explanation = FEATURE_DESCRIPTIONS.get(feature, "No explanation available.")
-        st.markdown(f"**{feature}**: `{value:.2f}`  \n*{explanation}*")
+            if not mfcc_explained:
+                explanation = FEATURE_DESCRIPTIONS.get("MFCC", "No explanation available.")
+                st.markdown(f"**{feature}**: `{value:.2f}`  \n*{explanation}*")
+                mfcc_explained = True
+            else:
+                st.markdown(f"**{feature}**: `{value:.2f}`")
+        else:
+            explanation = FEATURE_DESCRIPTIONS.get(feature, "No explanation available.")
+            st.markdown(f"**{feature}**: `{value:.2f}`  \n*{explanation}*")
 
