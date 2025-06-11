@@ -1,3 +1,5 @@
+# ---- Live recording module for audio input via microphone ----
+# This module allows users to record audio directly from their microphone and save it for further processing.
 import os
 import sounddevice as sd
 import soundfile as sf

@@ -1,8 +1,5 @@
+# ---- Language Detection Module ----
 from lingua import Language, LanguageDetectorBuilder
-import re
-import os
-
-
 
 # Build detector (lingua)
 detector = LanguageDetectorBuilder.from_all_languages().build()

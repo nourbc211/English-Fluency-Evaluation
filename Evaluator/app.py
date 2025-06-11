@@ -17,6 +17,7 @@ from pipeline.feature_extractor import generate_feature_file
 from pipeline.predictor import load_model, predict_and_aggregate
 from pipeline.transcriber import transcribe_all_audios
 from pipeline.language_detector import detect_language
+from pipeline.explanator import FEATURE_DESCRIPTIONS
 
 
 # dummy variable to avoid bugs
@@ -133,7 +134,6 @@ if audio_path:
     if lang_not_english:
         st.warning("⚠️ At least one segment is not in English.")
         st.success("🧠 Predicted Fluency Level: Low")
-        model_loaded = True
         st.stop()  # Stop further processing
    
 
@@ -144,7 +144,7 @@ if audio_path:
     X = generate_feature_file()
     st.write("🔬 Feature extraction complete.")
 
-    # Model prediction and aggregation
+    #---- Model prediction and aggregation -----
     model, top_features = load_model()
     model_loaded = True
     final_label, segment_labels = predict_and_aggregate(X, model, top_features)
@@ -186,4 +186,10 @@ if model_loaded :
     # show data table as well
     with st.expander("Show raw feature values"):
         st.dataframe(df_features)
+    
+    # ---- Feature descriptions ----
+    st.subheader("ℹ️ Feature Descriptions")
+    for feature, value in zip(top_features, X[0]):
+        explanation = FEATURE_DESCRIPTIONS.get(feature, "No explanation available.")
+        st.markdown(f"**{feature}**: `{value:.2f}`  \n*{explanation}*")
 

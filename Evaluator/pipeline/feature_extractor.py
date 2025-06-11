@@ -1,4 +1,5 @@
-# We here replicate the work we did in our Feature Extraction Notebook.
+# ---- Feature Extraction Pipeline ----
+# We here replicate the work we did in our Feature Extraction Notebook to extract all the features needed by our model.
 
 # Imports
 import os
@@ -44,8 +45,9 @@ def extract_text_features(text):
 
 # --- Acoustic features (e.g., MFCCs, ZCR, Spectral Flux, RMSE) ---
 def extract_acoustic_features(file_path):
-    import librosa
-    import numpy as np
+    """
+    We extract various acoustic features from the audio file, including MFCCs, RMSE, ZCR, spectral flux, pitch mean and std, and speech rate.
+    """
     y, sr = librosa.load(file_path, sr=None)
     
     mfcc = np.mean(librosa.feature.mfcc(y=y, sr=sr, n_mfcc=20).T, axis=0)
@@ -83,6 +85,9 @@ def extract_pause_features(y, sr):
 
 # --- Pronunciation features using Parselmouth (Praat) ---
 def extract_pronunciation_features(file_path):
+    """
+    We extract pronunciation features using Parselmouth (Praat) : jitter, shimmer, and HNR (Harmonics-to-Noise Ratio).
+    """
     try:
         snd = parselmouth.Sound(file_path)
         pitch = snd.to_pitch()
@@ -141,7 +146,7 @@ def generate_feature_file(audio_dir=segments_dir, transcript_dir=transcripts_dir
     print(f"Saving to {output_path}...")
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     np.save(output_path, features_array)
-    print(f"✅ Saved features for {len(file_list)} audio files to {output_path}")
+    print(f"Saved features for {len(file_list)} audio files to {output_path}")
 
 
     return features_array 
