@@ -6,11 +6,12 @@ import soundfile as sf
 import torch
 import glob
 import json
-torch.classes.__path__ = []  # 🛠️ workaround to avoid Streamlit crash
+torch.classes.__path__ = [] # Clear the path to avoid issues with custom classes
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+
 # App modules
 from pipeline.segmenter import segment_audio
 from pipeline.feature_extractor import generate_feature_file
@@ -18,6 +19,7 @@ from pipeline.predictor import load_model, predict_and_aggregate
 from pipeline.transcriber import transcribe_all_audios
 from pipeline.language_detector import detect_language
 from pipeline.explanator import FEATURE_DESCRIPTIONS
+from pipeline.explanator import compute_stats_by_class, analyze_feature_results
 
 
 # dummy variable to avoid bugs
@@ -190,6 +192,7 @@ if model_loaded :
     # ---- Feature descriptions ----
     st.subheader("ℹ️ Feature Descriptions")
 
+    
     mfcc_explained = False  # Flag to avoid repeating MFCC explanation
     for feature, value in zip(top_features, X[0]):
         if "MFCC" in feature:
@@ -200,4 +203,16 @@ if model_loaded :
         else:
             explanation = FEATURE_DESCRIPTIONS.get(feature, "No explanation available.")
             st.markdown(f"**{feature}**: `{value:.2f}`  \n*{explanation}*")
+    
+
+    # ---- Feature analysis vs class statistics ----
+    st.subheader("🧠 Feature Analysis vs Class Statistics")
+    st.markdown("This table compares your audio’s features to those typically found in the predicted fluency level. It shows how far each value is from the class average.")
+
+    # Calculate class statistics to compare with our results
+    class_stats = compute_stats_by_class()
+
+    # Analyze feature results
+    feature_analysis_df = analyze_feature_results(df_features, final_label, class_stats)
+    st.dataframe(feature_analysis_df, use_container_width=True) # to show
 

@@ -1,5 +1,10 @@
-#----- Script containing explanatory methods for the features-----
+#----- Script containing explanations of the features descriptive statistics -----
 
+import numpy as np
+import pandas as pd
+
+
+# ----- Feature Descriptions -----
 FEATURE_DESCRIPTIONS = {
     # Acoustic Features
     "MFCC": "These capture timbral and phonetic information of speech. Important for pronunciation quality.",
@@ -26,3 +31,69 @@ FEATURE_DESCRIPTIONS = {
     "HNR": "Harmonics-to-Noise Ratio — higher values = clearer voice with less breathiness.",
 }
 
+# ----- Descriptive Statistics -----
+full_feature_path = "Evaluator/training_data/full_feat.npy"
+full_labels_path = "Evaluator/training_data/full_labels.npy"
+
+def compute_stats_by_class(features_path=full_feature_path, labels_path=full_labels_path):
+    """
+    Compute descriptive statistics for each class in the dataset.
+    Args:
+        features_path (str): Path to the features file (numpy array).
+        labels_path (str): Path to the labels file (numpy array).
+    Returns:
+        dict: A dictionary containing mean, std, min, and max for each class.
+    """
+    X = np.load(features_path)
+    y = np.load(labels_path)
+    
+    stats = {}
+    for class_label in np.unique(y):
+        class_features = X[y == class_label]
+        stats[class_label] = {
+            "mean": np.mean(class_features, axis=0),
+            "std": np.std(class_features, axis=0),
+            "min": np.min(class_features, axis=0),
+            "max": np.max(class_features, axis=0),
+        }
+    return stats
+
+def analyze_feature_results(feature_values, label, stats):
+    """
+    Analyze feature values against class statistics.
+    Args:
+        feature_values (dataframe): Feature values to analyze.
+        stats (dict): Class statistics dictionary.
+    Returns:
+        dict: Analysis results for each class.
+    """
+    current_stats = stats[label]
+    results = []
+    for feature in feature_values:
+        actual_value = feature_values[feature]
+        mean = current_stats["mean"][feature]
+        std = current_stats["std"][feature]
+        min_val = current_stats["min"][feature]
+        max_val = current_stats["max"][feature]
+        z_score = (actual_value - mean) / std if std != 0 else 0.0
+        
+        # Qualitative assessment
+        if actual_value < min_val:
+            assessment = "⬇️ Below class range"
+        elif actual_value > max_val:
+            assessment = "⬆️ Above class range"
+        elif abs(z_score) < 0.5:
+            assessment = "✅ Close to class mean"
+        elif z_score > 0:
+            assessment = "➕ Slightly above average"
+        else:
+            assessment = "➖ Slightly below average"
+
+        results.append({
+            "Feature": feature,
+            "Value": round(actual_value, 2),
+            "Z-score": round(z_score, 2),
+            "Assessment": assessment
+        })
+
+    return pd.DataFrame(results)
