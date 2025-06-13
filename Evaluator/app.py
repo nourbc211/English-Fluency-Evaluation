@@ -190,7 +190,7 @@ if model_loaded :
         st.dataframe(df_features)
     
     # ---- Feature descriptions ----
-    st.subheader("ℹ️ Feature Descriptions")
+    st.subheader("ℹ️ Top Feature Descriptions")
 
     
     mfcc_explained = False  # Flag to avoid repeating MFCC explanation

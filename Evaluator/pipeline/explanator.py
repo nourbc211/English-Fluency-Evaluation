@@ -67,7 +67,10 @@ def analyze_feature_results(feature_values, label, stats):
     Returns:
         dict: Analysis results for each class.
     """
-    current_stats = stats[label]
+
+    # Map the label to its correponding numeric value
+    label_mapping = {"Low": 0, "Intermediate": 1, "High": 2}
+    current_stats = stats[label_mapping[label]]
     results = []
     for feature in feature_values:
         actual_value = feature_values[feature]
