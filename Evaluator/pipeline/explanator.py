@@ -70,10 +70,12 @@ def analyze_feature_results(feature_values, label, stats):
 
     # Map the label to its correponding numeric value
     label_mapping = {"Low": 0, "Intermediate": 1, "High": 2}
+    features_to_dict = feature_values.set_index("Feature").to_dict()["Value"]
     current_stats = stats[label_mapping[label]]
     results = []
-    for feature in feature_values:
-        actual_value = feature_values[feature]
+    for feature in features_to_dict.keys():
+        # Extract feature values and calculate z-score
+        actual_value = features_to_dict[feature]
         mean = current_stats["mean"][feature]
         std = current_stats["std"][feature]
         min_val = current_stats["min"][feature]
