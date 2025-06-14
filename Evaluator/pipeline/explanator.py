@@ -38,24 +38,32 @@ full_labels_path = "Evaluator/training_data/full_labels.npy"
 def compute_stats_by_class(features_path=full_feature_path, labels_path=full_labels_path):
     """
     Compute descriptive statistics for each class in the dataset.
-    Args:
-        features_path (str): Path to the features file (numpy array).
-        labels_path (str): Path to the labels file (numpy array).
-    Returns:
-        dict: A dictionary containing mean, std, min, and max for each class.
+    Returns a dictionary of {class_label: {mean, std, min, max}} with dicts as values.
     """
     X = np.load(features_path)
     y = np.load(labels_path)
-    
+
+    # Define the feature names manually (same order as X)
+    feature_names = (
+        [f"MFCC_{i}" for i in range(20)] + 
+        ["RMSE", "ZCR", "Spectral_Flux", "Pitch_Mean", "Pitch_Std", "Speech_Rate",
+         "Pause_Duration", "Num_Pauses", "Pause_Ratio", "Pause_too_long", "Avg_Sentence_Length",
+         "Vocab_Richness", "Jitter", "Shimmer", "HNR"]
+    )
+
+    df = pd.DataFrame(X, columns=feature_names)
+    df['label'] = y
+
     stats = {}
-    for class_label in np.unique(y):
-        class_features = X[y == class_label]
+    for class_label in sorted(df['label'].unique()):
+        group = df[df['label'] == class_label].drop(columns=["label"])
         stats[class_label] = {
-            "mean": np.mean(class_features, axis=0),
-            "std": np.std(class_features, axis=0),
-            "min": np.min(class_features, axis=0),
-            "max": np.max(class_features, axis=0),
+            "mean": group.mean().to_dict(),
+            "std": group.std().to_dict(),
+            "min": group.min().to_dict(),
+            "max": group.max().to_dict(),
         }
+
     return stats
 
 def analyze_feature_results(feature_values, label, stats):
